@@ -1,0 +1,7 @@
+# PyCharm
+.idea/
+
+# Python virtualenv environment folders
+env/
+env3/
+.env/
