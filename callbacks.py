@@ -1,7 +1,7 @@
 from chat_functions import (
     send_text_to_room,
 )
-from bot_commands import process_command
+from bot_commands import Command
 from nio import (
     JoinError,
 )
@@ -12,14 +12,17 @@ logger = logging.getLogger(__name__)
 
 class Callbacks(object):
 
-    def __init__(self, client, command_prefix):
+    def __init__(self, client, store, command_prefix):
         """
         Args:
             client (nio.AsyncClient): nio client used to interact with matrix
 
+            store (Storage): Bot storage
+
             command_prefix (str): The prefix for bot commands
         """
         self.client = client
+        self.store = store
         self.command_prefix = command_prefix
 
     async def message(self, room, event):
@@ -52,7 +55,8 @@ class Callbacks(object):
             # Remove the command prefix
             msg = msg[len(self.command_prefix):]
 
-        await process_command(self.client, msg, room, event)
+        command = Command(self.client, self.store, msg, room, event)
+        await command.process()
 
     async def invite(self, room, event):
         """Callback for when an invite is received. Join the room specified in the invite"""
