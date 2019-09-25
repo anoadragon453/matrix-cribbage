@@ -37,8 +37,8 @@ class Callbacks(object):
         # Extract the message text
         msg = event.body
 
-        # Ignore messages from ourself
-        if event.sender == self.client.user_id:
+        # Ignore messages from ourselves
+        if event.sender == self.client.user:
             return
 
         logger.debug(
